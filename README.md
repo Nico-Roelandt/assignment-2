@@ -1,4 +1,4 @@
-# Assignment 2 Web service design JBNU 2025
+# Assignment 2 – Web Service Design (JBNU 2025)
 
 Backend API for an online "fake" bookstore project developed as part of Assignment 2.
 The project implements a REST API with authentication, role-based access, database persistence, and documentation.
@@ -42,42 +42,39 @@ prisma/
 
 ## Installation & Local Execution
 
-### 1. Install dependencies
+1. **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-```bash
-npm install
-```
+2. **Environment variables**
 
-### 2. Environment variables
+    Create a `.env` file (see `.env.example`):
+    ```
+    DATABASE_URL="mysql://user:password@localhost:3306/bookstore"
+    JWT_SECRET="your_jwt_secret"
+    JWT_EXPIRES_IN="1h"
+    PORT=3000
+    PUBLIC_BASE_URL="http://localhost:3000"
+    ```
 
-Create a `.env` file (see `.env.example`):
+3. **Prisma setup**
+    ```bash
+    npx prisma generate
+    npx prisma migrate deploy
+    npx prisma db seed
+    ```
 
-```env
-DATABASE_URL="mysql://user:password@localhost:3306/bookstore"
-JWT_SECRET="your_jwt_secret"
-JWT_EXPIRES_IN="1h"
-PUBLIC_BASE_URL="http://localhost:8080"
-```
+4. **Start the server**
+    ```bash
+    npm run dev
+    ```
 
-### 3. Prisma setup
-
-```bash
-npx prisma generate
-npx prisma migrate deploy
-npx prisma db seed
-```
-
-### 4. Start the server
-
-```bash
-npm run dev
-```
-
-Server runs on: `http://localhost:8080`
+Server runs on: `http://localhost:3000`
 
 ## API Documentation (Swagger)
 
-Swagger UI is available at: `http://localhost:8080/docs`
+Swagger UI is available at: `http://localhost:3000/docs`
 
 It includes:
 - Endpoint list
@@ -88,37 +85,36 @@ It includes:
 
 ### Login
 
-**POST** `/auth/login`
+```
+POST /auth/login
+```
 
 **Body:**
-
 ```json
 {
-    "email": "user1@example.com",
-    "password": "password"
+  "email": "user1@example.com",
+  "password": "password"
 }
 ```
 
 **Response:**
-
 ```json
 {
-    "accessToken": "JWT_TOKEN"
+  "accessToken": "JWT_TOKEN"
 }
 ```
 
 Use the token in requests:
-
 ```
 Authorization: Bearer <token>
 ```
 
-### Roles
+## Roles
 
-| Role  | Description           |
-|-------|----------------------|
-| USER  | Standard user        |
-| ADMIN | Administrative access|
+| Role | Description |
+|------|-------------|
+| USER | Standard user |
+| ADMIN | Administrative access |
 
 ## Main API Endpoints
 
@@ -160,18 +156,45 @@ Authorization: Bearer <token>
 - `GET /discounts`
 
 ### Health Check
-- `GET /health` - Returns server status (200 OK)
+- `GET /health` – Returns server status (200 OK)
 
 ## Postman
 
-A Postman collection is provided in: `postman/`
+A Postman collection is provided in the `postman/` directory.
 
 It includes:
 - Environment variables
-- Auth scripts
-- Automated request tests
+- Authentication handling
+- Request examples
 
-## Deployment
+## Deployment (JCloud)
 
-The application is deployed on JCloud and accessible via public IP and port.
-Swagger and health check endpoints are available on the deployed server.
+The application was deployed on a JCloud virtual machine.
+
+- The backend runs correctly using PM2
+- The application listens on internal port 3000
+- The `/health` endpoint responds correctly when accessed locally on the VM
+
+**Expected port mapping according to JCloud configuration:**
+- Internal port: 3000
+- Expected public port: 13046
+
+**Local verification on the server:**
+```bash
+curl http://127.0.0.1:3000/health
+```
+
+**Returns:**
+```json
+{
+  "status": "OK",
+  "version": "1.0.0"
+}
+```
+
+However, despite the expected port forwarding configuration (3000 → 13046), the public port 13046 did not route traffic correctly to the application.
+
+**As a result:**
+- The backend is fully functional
+- All endpoints work locally and can be tested via SSH access
+- The issue appears to be related to JCloud port forwarding rather than the application itself
