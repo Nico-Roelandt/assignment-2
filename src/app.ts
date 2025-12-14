@@ -1,0 +1,35 @@
+import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { errorHandler } from "./middleware/errorHandler.js";
+import authRoutes from "./routes/auth.routes.js";
+import usersRoutes from "./routes/users.routes.js";
+import booksRoutes from "./routes/books.routes.js";
+import reviewsRoutes from "./routes/reviews.routes.js";
+import ordersRoutes from "./routes/orders.routes.js";
+import cartsRoutes from "./routes/carts.routes.js";
+import favoritesRoutes from "./routes/favorites.routes.js";
+import couponsRoutes from "./routes/coupons.routes.js";
+import discountsRoutes from "./routes/discounts.routes.js";
+
+import { swaggerSpec } from "./docs/swagger.js";
+
+export const app = express();
+
+app.use(express.json());
+
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", version: "1.0.0", buildTime: new Date().toISOString() });
+});
+
+app.use("/auth", authRoutes);
+app.use("/users", usersRoutes);
+app.use("/books", booksRoutes);
+app.use("/", reviewsRoutes);
+app.use("/orders", ordersRoutes);
+app.use("/cart", cartsRoutes);
+app.use("/favorites", favoritesRoutes);
+app.use("/coupons", couponsRoutes);
+app.use("/discounts", discountsRoutes);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(errorHandler);
