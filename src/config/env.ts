@@ -13,7 +13,4 @@ export const env = {
 
   jwtSecret: must("JWT_SECRET"),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "15m",
-
-  refreshSecret: must("REFRESH_SECRET"),
-  refreshExpiresIn: process.env.REFRESH_EXPIRES_IN || "14d"
 };
