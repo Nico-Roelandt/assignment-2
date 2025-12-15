@@ -184,6 +184,12 @@ The application was deployed on a JCloud virtual machine.
 curl http://127.0.0.1:3000/health
 ```
 
+**JCloud verification on the server:**
+```bash
+curl http://113.198.66.75:13032/health
+```
+on a web navigator : http://113.198.66.75:13032/health
+
 **Returns:**
 ```json
 {
@@ -191,10 +197,3 @@ curl http://127.0.0.1:3000/health
   "version": "1.0.0"
 }
 ```
-
-However, despite the expected port forwarding configuration (3000 → 13046), the public port 13046 did not route traffic correctly to the application.
-
-**As a result:**
-- The backend is fully functional
-- All endpoints work locally and can be tested via SSH access
-- The issue appears to be related to JCloud port forwarding rather than the application itself
